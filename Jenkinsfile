@@ -34,7 +34,7 @@ pipeline
 		stage('Unit Tests') {
 			steps{
 				echo "------------>Unit Tests<------------"
-	 sh './gradlew test'
+				sh './gradlew test'
 			}
 		}
 		stage('Integration Tests') {
@@ -47,13 +47,14 @@ pipeline
 			steps{
 				echo '------------>Analisis de codigo estatico<------------'
 				withSonarQubeEnv('Sonar') {
-					sh "${tool name: 'SonarScanner', type:'hudson.plugins.sonar.SonarRunnerInstallation'}/bin/sonar-scanner -Dproject.settings=sonar-project.properties"
+				sh "${tool name: 'SonarScanner', type:'hudson.plugins.sonar.SonarRunnerInstallation'}/bin/sonar-scanner -Dproject.settings=sonar-project.properties"
 				}
 			}
 		}
 		stage('Build') {
 			steps {
 				echo "------------>Build<------------"
+				sh 'gradle --b ./build.gradle build -x test'
 
 			}
 		}
@@ -64,6 +65,7 @@ pipeline
 		}
 		success {
 			echo 'This will run only if successful'
+			junit '**/build/test-results/test/*.xml'
 
 		}
 		failure {
