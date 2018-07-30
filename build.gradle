@@ -1,4 +1,3 @@
-
 buildscript {
 	ext {
 		springBootVersion = '2.0.3.RELEASE'
@@ -8,7 +7,6 @@ buildscript {
 	}
 	dependencies {
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-       classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.6.2"
 	}
 }
 
@@ -16,9 +14,8 @@ apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
-apply plugin: 'org.sonarqube'
 
-group = 'parqueaderoceiba'
+group = 'com.example'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.8
 
@@ -28,59 +25,9 @@ repositories {
 
 
 dependencies {
-	
+	compile('org.springframework.boot:spring-boot-starter-data-jpa')
 	compile('org.springframework.boot:spring-boot-starter-web')
-
-	  compile 'com.h2database:h2:1.4.194'	
-	  compile 'org.hibernate:hibernate-core:5.2.9.Final'	
-	  compile 'junit:junit:4.12'
-
-	      
-	  testCompile 'junit:junit:4.12'
-	  testCompile 'org.mockito:mockito-all:1.10.19'
-}
-
-
-sourceSets {
-    // So that we can place source code in 'src/integrationTest/java':
-    integrationTest {
-        java {
- 
-            // So that we can compile against the business classes (GreeterService, ...):
-            compileClasspath += main.output
-            // So that we can compile against the libs used by the business classes:
-            compileClasspath += main.compileClasspath
- 
-            // So that we can compile against the unit test classes (custom utilities fx):
-            compileClasspath += test.output
-            // So that we can compile against the libs used by the unit test classes (JUnit, Spring test support, ...):
-            compileClasspath += test.compileClasspath
- 
-            // So that test- and business classes can be used at runtime:
-            runtimeClasspath += test.runtimeClasspath
- 
-        }
-    }
-}
- 
- 
- task integrationTest(type: Test) {
- 
-    // So that Gradle knows where the integration test classes are:
-    testClassesDir = sourceSets.integrationTest.output.classesDir
- 
-    // So that Gradle knows which runtime class path to use:
-    classpath = sourceSets.integrationTest.runtimeClasspath
- 
-}
-
-
-sonarqube {
-properties {
-property "sonar.host.url", "https://sonar.ceiba.com.co" //  url is your sonar server
-property "sonar.projectName", "parqueadero-ceiba"   //  this name will appear in dashboard
-property "sonar.login", "cristian.castano"   //  this name will appear in dashboard
-property "sonar.password", "punksk8199309*"   //  this name will appear in dashboard
-property "sonar.projectKey", "parqueadero-ceiba.cristian.castano" // It sould be a keybased on this report is created
-property "sonar.groovy.jacoco.reportPath", "${project.buildDir}/jacoco/test.exec"    }
+	runtime('com.h2database:h2')
+	runtime('mysql:mysql-connector-java')
+	testCompile('org.springframework.boot:spring-boot-starter-test')
 }
